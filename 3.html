@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+    crossorigin="anonymous" />
+  <style>
+    i {
+      font-size: 50px;
+    }
+
+    .golden {
+      color: gold;
+    }
+  </style>
+</head>
+
+<body>
+  <!--
+Обязательное задание.
+
+Выполнить все задачи в теге script. Комментарии, в которых написаны задачи, не
+стирать, код с решением задачи пишем под комментарием.
+-->
+
+  <div class="stars_container">
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+    <i class="fas fa-star"></i>
+  </div>
+
+  <script>
+    "use strict";
+
+    /*
+    1. При наведении на любую из звезд, данной звезде должен ставиться класс
+    golden, также такой класс должен ставиться всем звездам до нее слева.
+    */
+
+    const starsDiv = document.querySelector('.stars_container');
+
+    const starCollection = document.querySelectorAll('.fas');
+
+    const lastStar = starCollection[starCollection.length - 1];
+
+    console.dir(starCollection[4]);
+
+    let userMOverXPos = null;
+    let userMOutXPos = null;
+    let userMOutYPos = null;
+
+    starCollection.forEach(el => el.addEventListener('mouseover', function (event) {
+      userMOverXPos = event.clientX;
+      for (let index = 0; index < starCollection.length; index++) {
+        starCollection[index].classList.add('golden');
+        if (starCollection[index] === el) {
+          break;
+        }
+      }
+    }));
+
+    /*
+    2. Когда мы уводим курсор мыши от звезды, все поставленные классы из первого
+    задания должны быть удалены.
+    */
+
+    starCollection.forEach(el => el.addEventListener('mouseout', (event) => {
+      userMOutXPos = event.clientX;
+      userMOutYPos = event.clientY;
+      console.log(event);
+      if (userMOutXPos < userMOverXPos) {
+        el.classList.remove('golden');
+      }
+      if (userMOutYPos > starsDiv.clientHeight || userMOutXPos > ((lastStar.offsetLeft + lastStar.clientWidth) * 0.98)) {
+        starCollection.forEach(el => el.classList.remove('golden'));
+      }
+    }));
+
+
+    /*
+    3. Когда мы переводим мышь от одной звезды к другой, у нас могут мигать
+    звезды (временно могут становиться черными). Почему так? Напишите словами.
+    Можем ли мы это исправить? Если да, то предложите решение.
+    */
+
+    // временно могут становиться черными из-за того что при обработке события
+    // mouseout прикрепленной к любой звезде класс golden убирался у всех звезд
+    // соответственно при наведении на промежуток между звездами - они все черные
+    // навеодим на соеседнюю она и предыдущие золотые
+
+    // Мое решение заключается в отслеживании курсора на событии mouseout и mouseover
+    // и построении соответствующей логики, то есть при выходе курсора за
+    // пределы рсположения звезд - все черные, если mouseoutX < mouseoverX -проиходит перемещение влево,
+    // то с текущей звезды удаляем golden, а не со всех
+  </script>
+</body>
+
+</html>
